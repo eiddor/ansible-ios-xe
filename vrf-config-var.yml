@@ -4,6 +4,9 @@
   hosts: csr
   connection: local
   gather_facts: no
+  #  I decided to enter MPLS VPN variables directly into the Playbook.  There are other options of course
+  #  These 5 variables are all that is needed to get a basic VRF enabled, add the RD and RT,
+  #  apply the VRF to an interface of choice, and then add the address-family to BGP (could be other protocol)
   vars:
     rd_id: '1:1'
     rt_imp: '1:1'
@@ -18,11 +21,12 @@
   - name: Define Provider
     set_fact:
       provider:
-        #host: 192.168.50.105
+      #  This references my "access.yml' file for login credentials
         host: "{{ access['device_ip'] }}"
         username: "{{ access['username'] }}"
         password: "{{ access['password'] }}"
 
+#  I used variables for all of the needed commands, offering flexibility for the operator
   - name: Create VRF
     ios_config:
       provider: "{{ provider }}"
