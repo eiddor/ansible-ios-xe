@@ -23,7 +23,7 @@
       commands:
       # "CLI" is the variable for any show command on the $prompt
         - "{{ cli }}"
-
+#  For example, for "show vrf" you coul use:  ansible$  ansible-playbook -1 hosts ios-show.yml -e "cli='show vrf'"
       
     register: output
 
