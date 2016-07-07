@@ -1,0 +1,83 @@
+---
+
+- name: IOS-XE - VRF configuration Playbook
+  hosts: csr
+  connection: local
+  gather_facts: no
+  vars:
+    rd_id: '1:1'
+    rt_imp: '1:1'
+    rt_exp: '1:1'
+    vrf_name: ansible
+    int_name:  loopback0
+
+  tasks:
+  - name: Get Login credentials
+    include_vars: /mnt/hgfs/vm_shared/ansible/access.yml
+
+  - name: Define Provider
+    set_fact:
+      provider:
+        #host: 192.168.50.105
+        host: "{{ access['device_ip'] }}"
+        username: "{{ access['username'] }}"
+        password: "{{ access['password'] }}"
+
+  - name: Create VRF
+    ios_config:
+      provider: "{{ provider }}"
+      authorize: yes
+      lines:
+        - rd {{ rd_id }}
+        - route-target export {{ rt_exp }}
+        - route-target import {{ rt_imp }}
+        - address-family ipv4
+        - exit-address-family
+      parents: ['vrf definition {{ vrf_name }}']
+      match: exact
+
+  - name: Create and Attach VRF to Interface
+    ios_config:
+      provider: "{{ provider }}"
+      authorize: yes
+      lines:
+        - vrf forwarding {{ vrf_name }}
+      parents: ['interface {{ int_name }}']
+      match: exact
+
+  - name: Create and 'CONFIGURE VRF Under BGP'
+    ios_config:
+      provider: "{{ provider }}"
+      authorize: yes
+      lines:
+         - address-family ipv4 vrf {{ vrf_name }}
+         - exit-address-family
+      parents: ['router bgp 65000']
+      match: exact
+
+
+  - name: Run 'show VRF'
+    ios_command:
+      provider: "{{ provider }}"
+      authorize: yes
+      commands:
+        - show vrf
+
+    register: vrf
+  - debug: var=vrf.stdout_lines
+
+  - name: Run 'show IP Interface Brief'
+    ios_command:
+      provider: "{{ provider }}"
+      authorize: yes
+      commands:
+        - show ip interface brief
+
+    register: brief
+  - debug: var=brief.stdout_lines
+
+  handlers:
+   - name: write config
+     ios_command:
+        commands: write memory
+        provider: "{{ provider }}"
