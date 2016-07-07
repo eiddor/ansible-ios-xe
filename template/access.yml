@@ -1,0 +1,17 @@
+#---
+#-  hosts: all
+#   connection: local
+#   gather_facts: no
+#   vars_files:
+#     - vars/vlans.yml
+#   handlers:
+#     - include: handlers/main.yml
+#
+#  Example of a yaml file that is called - access.yml
+---
+access:
+  device_ip: 192.168.50.105
+  username: cisco
+  password: cisco
+
+...
