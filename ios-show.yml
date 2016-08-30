@@ -12,7 +12,7 @@
   - name: Define Provider
     set_fact:
       provider:
-        host: "{{ access['device_ip'] }}"
+        host: "{{ inventory_hostname }}"
         username: "{{ access['username'] }}"
         password: "{{ access['password'] }}"
 
@@ -21,9 +21,9 @@
       provider: "{{ provider }}"
       authorize: yes
       commands:
-      # "CLI" is the variable for any show command on the $prompt
+      # "CLI" is the variable for any show command on the $prompt, using -e "cli='show command'"
         - "{{ cli }}"
-#  For example, for "show vrf" you coul use:  ansible$  ansible-playbook -1 hosts ios-show.yml -e "cli='show vrf'"
+
       
     register: output
 
