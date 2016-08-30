@@ -70,12 +70,12 @@
     register: vrf
   - debug: var=vrf.stdout_lines
 
-  - name: Run 'show IP VRF Interface'
+  - name: Run 'show IP Interface Brief'
     ios_command:
       provider: "{{ provider }}"
       authorize: yes
       commands:
-        - show ip vrf interface
+        - show ip interface brief
 
     register: brief
   - debug: var=brief.stdout_lines

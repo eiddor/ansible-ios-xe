@@ -7,11 +7,9 @@
 #   - Groups of hosts are delimited by [header] elements
 #   - You can enter hostnames or ip addresses
 #   - A hostname/ip can be a member of multiple groups
-
+# #######################################################
 ## csr ansible_port=55443 ansible_host=192.168.50.105
-
 # Ex 2: A collection of hosts belonging to the 'webservers' group
-
 # This is my list of hosts being used for initial testing
 
 [csr]
@@ -22,7 +20,7 @@
 ## 192.168.1.130
 ## 192.168.1.100
 
+
 192.168.50.105
-
-
-
+192.168.50.131
+172.16.1.73
